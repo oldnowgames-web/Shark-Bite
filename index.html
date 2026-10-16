@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Shark Bite</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+  <canvas id="game"></canvas>
+
+  <!-- HUD -->
+  <div id="hud" class="hidden">
+    <div class="panel hud-tl">
+      <div class="row"><span id="stageName">Filhote</span><span id="stageNum">1/6</span></div>
+      <div class="bar size"><i id="sizeFill"></i></div>
+      <div class="row small"><span>Pontos</span><span id="score">0</span></div>
+    </div>
+    <div class="panel hud-stats">
+      <span class="ico" style="--r:2;--c:4"></span><b id="coinsN">0</b>
+      <span class="ico" style="--r:10;--c:2"></span><b id="eatenN">0</b>
+    </div>
+    <div class="panel hud-tr">
+      <div class="row small"><span>Vida</span><span id="hpText">100</span></div>
+      <div class="bar hp"><i id="hpFill"></i></div>
+      <div class="row small"><span>Fôlego</span></div>
+      <div class="bar sta"><i id="staFill"></i></div>
+      <div id="hungerBox" class="hidden">
+        <div class="row small"><span>Fome</span><span id="hunText"></span></div>
+        <div class="bar hun"><i id="hunFill"></i></div>
+      </div>
+    </div>
+    <div class="panel hud-mode hidden" id="modeBox"><span id="modeTxt"></span><small id="modeSub"></small></div>
+    <div id="evtBadge" class="hidden"></div>
+    <div id="bossBar" class="hidden"><span id="bossName">Chefe</span><div class="bar boss"><i id="bossFill"></i></div></div>
+    <div id="combo" class="hidden"></div>
+    <div id="banner" class="hidden"></div>
+    <div class="panel hud-br"><canvas id="mini" width="150" height="84"></canvas></div>
+    <div class="panel hud-bl" id="chips"></div>
+    <button id="pauseBtn" class="icon-btn" aria-label="Pausar">II</button>
+    <button id="dashBtn" class="dash-btn hidden">DASH</button>
+  </div>
+  <div id="toasts"></div>
+
+  <!-- MENU PRINCIPAL -->
+  <section id="menu" class="screen">
+    <div class="wallet-tag"><span class="ico" style="--r:2;--c:4"></span><b id="walletMenu">0</b></div>
+    <div class="title-wrap">
+      <div id="titleShark" class="title-shark" aria-hidden="true"></div>
+      <h1>SHARK<br><span>BITE</span></h1>
+      <p class="tag">Coma, cresça e domine os mares!</p>
+    </div>
+    <div class="menu-buttons">
+      <button class="btn" id="btnPlay">Jogar</button>
+      <div class="btn-row">
+        <button class="btn half" id="btnSkins">Skins</button>
+        <button class="btn half" id="btnAch">Conquistas</button>
+      </div>
+      <div class="btn-row">
+        <button class="btn half" id="btnAlbum">Álbum</button>
+        <button class="btn half" id="btnHow">Como jogar</button>
+      </div>
+      <div class="btn-row">
+        <button class="btn half" id="btnOpts">Opções</button>
+        <button class="btn half" id="btnCredits">Créditos</button>
+      </div>
+    </div>
+    <div class="best" id="bestMenu"></div>
+  </section>
+
+  <!-- MODOS DE JOGO -->
+  <section id="modes" class="screen hidden">
+    <div class="panel big wide">
+      <h2>Escolha o modo</h2>
+      <div id="modeList" class="mode-list"></div>
+      <button class="btn" data-back>Voltar</button>
+    </div>
+  </section>
+
+  <!-- COMO JOGAR -->
+  <section id="how" class="screen hidden">
+    <div class="panel big wide">
+      <h2>Como jogar</h2>
+      <ul class="how-list scroll">
+        <li><b>Mover:</b> setas / WASD ou mouse (o tubarão segue o cursor). No celular, arraste o dedo.</li>
+        <li><b>Dash:</b> segure <kbd>Espaço</kbd> / <kbd>Shift</kbd> / botão do mouse. Gasta fôlego e dá mordidas mais fortes.</li>
+        <li><b>Comer:</b> abocanhe presas <u>menores ou do seu tamanho</u> para crescer. Subir de tamanho exige cada vez mais!</li>
+        <li><b>Fome:</b> a barra de fome esvazia. Zerou? Você perde vida aos poucos. Vá caçar!</li>
+        <li><b>Chefes:</b> o Rei Espada e a Serra Rainha atacam em investidas. Quando ficam <u>cansados</u> (estrelinhas), morda!</li>
+        <li><b>Eventos:</b> cardume dourado (vale muito), tempestade (correnteza e pouca visão) e chuva de moedas.</li>
+        <li><b>Rival:</b> outro tubarão disputa seus peixes. Ataque com dash para espantá-lo.</li>
+        <li><b>Modos:</b> Clássico, Caçada (5 min de pontos) e Sobrevivência (ondas).</li>
+        <li><b>Moedas</b> compram skins com efeitos. <b>Conquistas</b> e o <b>Álbum</b> dão moedas extras.</li>
+        <li><b>Pausa:</b> <kbd>P</kbd> ou <kbd>Esc</kbd>.</li>
+      </ul>
+      <button class="btn" data-back>Voltar</button>
+    </div>
+  </section>
+
+  <!-- OPÇÕES -->
+  <section id="opts" class="screen hidden">
+    <div class="panel big">
+      <h2>Opções</h2>
+      <div class="opt-row"><span class="opt-label">Efeitos</span><div class="slider" id="slSfx"></div></div>
+      <div class="opt-row"><span class="opt-label">Música</span><div class="slider" id="slMus"></div></div>
+      <button class="btn" data-back>Voltar</button>
+    </div>
+  </section>
+
+  <!-- SKINS -->
+  <section id="skins" class="screen hidden">
+    <div class="panel big wide">
+      <h2>Skins</h2>
+      <div class="wallet-row"><span class="ico" style="--r:2;--c:4"></span><b id="walletSkins">0</b><span class="small">moedas</span></div>
+      <div id="skinGrid" class="skin-grid scroll"></div>
+      <p class="small" id="skinMsg">Toque numa skin para usar ou comprar</p>
+      <button class="btn" data-back>Voltar</button>
+    </div>
+  </section>
+
+  <!-- CONQUISTAS -->
+  <section id="ach" class="screen hidden">
+    <div class="panel big wide">
+      <h2>Conquistas</h2>
+      <p class="small" id="achSum"></p>
+      <div id="achList" class="ach-list scroll"></div>
+      <button class="btn" data-back>Voltar</button>
+    </div>
+  </section>
+
+  <!-- ÁLBUM DE PEIXES -->
+  <section id="album" class="screen hidden">
+    <div class="panel big wide">
+      <h2>Álbum de peixes</h2>
+      <p class="small" id="albumSum"></p>
+      <div id="albumGrid" class="album-grid scroll"></div>
+      <button class="btn" data-back>Voltar</button>
+    </div>
+  </section>
+
+  <!-- CRÉDITOS -->
+  <section id="credits" class="screen hidden">
+    <div class="panel big">
+      <h2>Créditos</h2>
+      <p>Arte: <b>Szym</b> — SpearFishing Assets Pack</p>
+      <p>Código, sons e música sintetizados no navegador.</p>
+      <p class="small">Feito com HTML, CSS e JavaScript.</p>
+      <button class="btn" data-back>Voltar</button>
+    </div>
+  </section>
+
+  <!-- PAUSE -->
+  <section id="pause" class="screen hidden">
+    <div class="panel big">
+      <h2>Pausado</h2>
+      <button class="btn wide" id="btnResume">Continuar</button>
+      <button class="btn wide" id="btnRestart">Recomeçar</button>
+      <button class="btn wide" id="btnQuit">Menu principal</button>
+    </div>
+  </section>
+
+  <!-- FIM DE JOGO -->
+  <section id="over" class="screen hidden">
+    <div class="panel big">
+      <h2 id="overTitle">Fim de jogo</h2>
+      <p id="overSub" class="small"></p>
+      <table class="stats">
+        <tr><td><span class="ico" style="--r:0;--c:3"></span>Pontos</td><td id="stScore">0</td></tr>
+        <tr><td><span class="ico" style="--r:0;--c:4"></span>Recorde</td><td id="stBest">0</td></tr>
+        <tr><td><span class="ico" style="--r:8;--c:2"></span>Tamanho</td><td id="stLevel">1</td></tr>
+        <tr><td><span class="ico" style="--r:10;--c:2"></span>Presas comidas</td><td id="stEaten">0</td></tr>
+        <tr><td><span class="ico" style="--r:2;--c:4"></span>Moedas ganhas</td><td id="stCoins">0</td></tr>
+        <tr><td><span class="ico" style="--r:1;--c:0"></span>Tempo</td><td id="stTime">0:00</td></tr>
+        <tr><td><span class="ico" style="--r:0;--c:5"></span><span id="stExtraK">Extra</span></td><td id="stExtraV">-</td></tr>
+      </table>
+      <button class="btn wide" id="btnAgain">Jogar de novo</button>
+      <button class="btn wide" id="btnMenu">Menu principal</button>
+    </div>
+  </section>
+
+  <!-- CARREGANDO -->
+  <section id="loading" class="screen">
+    <div class="panel big"><h2>Carregando…</h2><div class="bar size"><i id="loadFill"></i></div></div>
+  </section>
+</div>
+<script src="data.js"></script>
+<script src="meta.js"></script>
+<script src="game.js"></script>
+</body>
+</html>

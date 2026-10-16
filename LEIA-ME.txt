@@ -1,0 +1,31 @@
+SHARK BITE
+================
+Abra o arquivo index.html no navegador (Chrome, Edge, Firefox...) e jogue.
+
+Controles
+- Mover: setas / WASD, ou o mouse (o tubarão segue o cursor). No celular, arraste o dedo.
+- Dash: Espaço / Shift / botão do mouse (no celular, botão DASH).
+- Pausar: P ou Esc.
+
+Modos de jogo (Menu > Jogar)
+- Clássico: cresça até virar o Rei dos Mares (subir de tamanho agora é mais difícil).
+- Caçada: 5 minutos para fazer o máximo de pontos (últimos 30s valem em dobro).
+- Sobrevivência: ondas de predadores cada vez piores, com chefe a cada 5 ondas.
+
+Novidades
+- Fome: sem comer, a barra de Fome zera e você perde vida devagar.
+- Chefes: Rei Espada e Serra Rainha. Desvie da investida; quando o chefe bate na parede ele fica tonto e é a hora de morder!
+- Eventos aleatórios (a cada 1-2 min): Cardume Dourado (vale muito) e Tempestade (correnteza forte, pouca visão).
+- Tubarão rival (IA) que disputa os peixes com você. Se for maior que você, ele morde; se for menor, você pode devorá-lo.
+- Skins com efeitos (Fantasma, Bioluz, Magma, Elétrico, Arco-íris, Galáxia) compradas com moedas.
+- Conquistas e Álbum de peixes (coma cada espécie várias vezes para completar a página e ganhar moedas).
+
+Arquivos
+- index.html  -> telas (menu, modos, skins, conquistas, álbum, pausa, fim de jogo) e HUD
+- style.css   -> visual dos menus e do HUD (painéis em pixel art)
+- data.js     -> constantes: espécies, modos, skins, álbum e conquistas
+- meta.js     -> progresso salvo e telas de menu
+- game.js     -> todo o jogo
+- assets/     -> sprites do SpearFishing Assets Pack (arte de Szym) + LICENCE-assets.txt
+
+Arte: Szym - SpearFishing Assets Pack.
